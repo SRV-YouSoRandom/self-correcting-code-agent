@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 from agent.llm.providers.gemini import GeminiProvider
 from agent.llm.providers.openrouter import OpenRouterProvider
+import httpx
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+
 from agent.llm.tiers import LLMResponse, ModelTier, ProviderName, resolve_tier
 
 load_dotenv()
@@ -21,6 +24,12 @@ class LLMClient:
                 self._providers[name] = GeminiProvider()
         return self._providers[name]
 
+    @retry(
+        retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TimeoutException, httpx.ConnectError)),
+        stop=stop_after_attempt(4),
+        wait=wait_exponential(multiplier=1, min=2, max=20),
+        reraise=True,
+    )
     async def generate(
         self,
         prompt: str,

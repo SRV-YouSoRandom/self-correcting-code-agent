@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from agent.core.context.attempt_log import build_attempt_summaries
-from agent.core.errors.classifier import classify_execution_failure, classify_semantic_failure
+from agent.core.errors.classifier import classify_contract_failure, classify_execution_failure, classify_semantic_failure
 from agent.core.nodes.generate import strip_code_fences
 from agent.core.retry.budget import check_can_retry, record_attempt_cost
 from agent.core.retry.router import decide_repair
@@ -23,6 +23,8 @@ async def reflect(session: SessionState, llm_client: LLMClient) -> SessionState:
 
     if evaluation.failed_layer == EvaluationLayer.SEMANTIC:
         error = classify_semantic_failure(evaluation.reason)
+    elif evaluation.failed_layer == EvaluationLayer.CONTRACT:
+        error = classify_contract_failure(evaluation.reason)
     else:
         error = classify_execution_failure(attempt.execution_result)
 

@@ -7,6 +7,7 @@ class ErrorCategory(str, Enum):
     RUNTIME = "runtime"
     RESOURCE = "resource"
     EXTERNAL = "external"
+    CONTRACT = "contract"
     SEMANTIC = "semantic"
     UNKNOWN = "unknown"
 
@@ -22,6 +23,7 @@ CATEGORY_REPAIR_STRATEGY: dict[ErrorCategory, RepairStrategy] = {
     ErrorCategory.RUNTIME: RepairStrategy.PATCH,
     ErrorCategory.RESOURCE: RepairStrategy.RETHINK,
     ErrorCategory.EXTERNAL: RepairStrategy.RETHINK,
+    ErrorCategory.CONTRACT: RepairStrategy.PATCH,
     ErrorCategory.SEMANTIC: RepairStrategy.RETHINK,
     ErrorCategory.UNKNOWN: RepairStrategy.PATCH,
 }

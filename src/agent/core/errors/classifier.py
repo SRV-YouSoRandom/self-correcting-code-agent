@@ -60,3 +60,12 @@ def classify_semantic_failure(reason: str) -> ErrorClassification:
         exception_name=None,
         truncated_traceback=reason,
     )
+
+
+def classify_contract_failure(reason: str) -> ErrorClassification:
+    return ErrorClassification(
+        category=ErrorCategory.CONTRACT,
+        repair_strategy=repair_strategy_for(ErrorCategory.CONTRACT),
+        exception_name=None,
+        truncated_traceback=reason,
+    )

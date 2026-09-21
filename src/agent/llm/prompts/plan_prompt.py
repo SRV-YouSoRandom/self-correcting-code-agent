@@ -11,9 +11,9 @@ The JSON object must match this structure exactly:
     {
       "artifact_type": "png" | "jpeg" | "csv" | "json" | "text" | "html" | "none",
       "filename": "expected output filename",
-      "min_size_bytes": integer,
+      "min_size_byte": integer,
       "expected_columns": ["list of expected column names, empty if not tabular"],
-      "min_rows": integer or null,
+      "min_row": integer or null,
       "min_pixel_variance": float or null
     }
   ],

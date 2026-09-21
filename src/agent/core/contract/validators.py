@@ -57,11 +57,11 @@ def validate_contract_layer(
 
 def _validate_single_artifact(path: Path, expectation: ArtifactExpectations) -> EvaluationResult:
     size = path.stat().st_size
-    if size < expectation.min_size_bytes:
+    if size < expectation.min_size_byte:
         return EvaluationResult(
             passed=False,
             failed_layer=EvaluationLayer.CONTRACT,
-            reason=f"Artifact '{expectation.filename}' is only {size} bytes, expected at least {expectation.min_size_bytes}.",
+            reason=f"Artifact '{expectation.filename}' is only {size} bytes, expected at least {expectation.min_size_byte}.",
         )
 
     if expectation.artifact_type == ArtifactType.PNG:
@@ -138,11 +138,11 @@ def _validate_csv(path: Path, expectation: ArtifactExpectations) -> EvaluationRe
             )
 
     data_row_count = len(rows) - 1
-    if expectation.min_rows is not None and data_row_count < expectation.min_rows:
+    if expectation.min_row is not None and data_row_count < expectation.min_row:
         return EvaluationResult(
             passed=False,
             failed_layer=EvaluationLayer.CONTRACT,
-            reason=f"Artifact '{expectation.filename}' has {data_row_count} data rows, expected at least {expectation.min_rows}.",
+            reason=f"Artifact '{expectation.filename}' has {data_row_count} data rows, expected at least {expectation.min_row}.",
         )
 
     return EvaluationResult(passed=True)
@@ -165,12 +165,12 @@ def _validate_json(path: Path, expectation: ArtifactExpectations) -> EvaluationR
             reason=f"Artifact '{expectation.filename}' is empty JSON.",
         )
 
-    if expectation.min_rows is not None and isinstance(content, list):
-        if len(content) < expectation.min_rows:
+    if expectation.min_row is not None and isinstance(content, list):
+        if len(content) < expectation.min_row:
             return EvaluationResult(
                 passed=False,
                 failed_layer=EvaluationLayer.CONTRACT,
-                reason=f"Artifact '{expectation.filename}' has {len(content)} items, expected at least {expectation.min_rows}.",
+                reason=f"Artifact '{expectation.filename}' has {len(content)} items, expected at least {expectation.min_row}.",
             )
 
     return EvaluationResult(passed=True)

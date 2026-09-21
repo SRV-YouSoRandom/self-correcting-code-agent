@@ -27,7 +27,15 @@ class GeminiProvider:
 
         async with httpx.AsyncClient(timeout=self._timeout_seconds) as client:
             response = await client.post(url, json=payload)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as exc:
+                safe_url = str(exc.request.url).split("?")[0]
+                raise httpx.HTTPStatusError(
+                    f"{exc.response.status_code} error for {safe_url}",
+                    request=exc.request,
+                    response=exc.response,
+                ) from None
             data = response.json()
 
         candidate = data["candidates"][0]
