@@ -26,8 +26,8 @@ class LLMClient:
 
     @retry(
         retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TimeoutException, httpx.ConnectError)),
-        stop=stop_after_attempt(4),
-        wait=wait_exponential(multiplier=1, min=2, max=20),
+        stop=stop_after_attempt(6),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
         reraise=True,
     )
     async def generate(
