@@ -32,4 +32,5 @@ dev = [
 asyncio_mode = "auto"
 markers = [
     "integration: slower tests requiring Docker and/or real LLM API calls",
+    "security: adversarial tests attempting sandbox escape, resource exhaustion, or network bypass",
 ]

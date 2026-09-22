@@ -9,6 +9,7 @@ from pathlib import Path
 
 import docker
 from docker.errors import ImageNotFound, NotFound
+from docker.types import Ulimit
 
 from agent.core.contract.schema import ExecutionContract
 from agent.core.state import ExecutionResult
@@ -83,6 +84,7 @@ class SandboxRunner:
             mem_limit=limits.memory_bytes,
             nano_cpus=limits.nano_cpus,
             pids_limit=limits.pids_limit,
+            ulimits=[Ulimit(name="nofile", soft=256, hard=256)],
             network_mode=network_policy.docker_network_mode(),
             cap_drop=["ALL"],
             security_opt=["no-new-privileges"],
