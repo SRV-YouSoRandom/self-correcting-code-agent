@@ -7,7 +7,7 @@ from agent.core.errors.taxonomy import EXTERNAL_HTTP_STATUS_SIGNALS, RESOURCE_SI
 
 _TRACEBACK_HEADER_RE = re.compile(r"^Traceback \(most recent call last\):", re.MULTILINE)
 _FRAME_LINE_RE = re.compile(r'^\s*File "(?P<file>.+?)", line (?P<line>\d+), in (?P<func>.+)$', re.MULTILINE)
-_EXCEPTION_LINE_RE = re.compile(r"^(?P<name>[A-Za-z_][A-Za-z0-9_.]*(?:Error|Exception|Warning)):\s*(?P<message>.*)$", re.MULTILINE)
+_EXCEPTION_LINE_RE = re.compile(r"^(?P<name>[A-Za-z_][A-Za-z0-9_.]*(?:Error|Exception|Warning))(?::\s*(?P<message>.*))?$", re.MULTILINE)
 _HTTP_STATUS_RE = re.compile(r"\b(4\d{2}|5\d{2})\b")
 
 DEFAULT_MAX_TRACEBACK_LINES = 30
@@ -52,7 +52,7 @@ def _extract_exception(text: str) -> tuple[str | None, str]:
     if not matches:
         return None, ""
     last = matches[-1]
-    return last.group("name"), last.group("message").strip()
+    return last.group("name"), (last.group("message") or "").strip()
 
 
 def _extract_http_status(text: str) -> int | None:
