@@ -1,0 +1,25 @@
+category: resource
+description: >
+  Failures from exceeding time, memory, or process limits. Repair
+  strategy is "rethink" - patching the same approach rarely helps,
+  since the approach itself is what needs to change (e.g. streaming
+  instead of loading everything into memory).
+examples:
+  - name: unbounded_loop_on_large_input
+    prompt: >
+      Write a script that computes all prime numbers up to 10^9 using
+      a simple nested loop (not the Sieve of Eratosthenes).
+    expected_failure: timed_out=True
+    notes: >
+      Deliberately asks for an inefficient algorithm on a large bound,
+      reliably exceeding the sandbox's max_execution_seconds. A good
+      rethink-tier repair should switch to a sieve-based approach.
+
+  - name: unbounded_memory_growth
+    prompt: >
+      Write a script that reads a very large synthetic dataset into a
+      single in-memory list without any batching, then processes it.
+    expected_failure: MemoryError, non-zero exit, or timed_out
+    notes: >
+      Directly exercises the sandbox's mem_limit; the security test
+      suite covers a more adversarial version of this same pattern.

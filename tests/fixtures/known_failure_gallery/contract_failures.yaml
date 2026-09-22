@@ -1,0 +1,31 @@
+category: contract
+description: >
+  Cases where code executes successfully (exit code 0, no exception)
+  but the produced artifact fails structural validation - wrong size,
+  missing columns, insufficient rows, wrong file type. Repair strategy
+  is "patch", since the approach is usually correct and just needs to
+  produce more/better-formed output.
+examples:
+  - name: artifact_too_small
+    prompt: >
+      Write a script that creates a CSV file named data.csv with
+      columns name and age, containing 3 rows of sample data.
+    expected_failure: >
+      EvaluationResult(passed=False, failed_layer=CONTRACT, reason
+      mentions artifact being smaller than min_size_byte)
+    notes: >
+      Observed in a real run - first attempt produced a CSV under the
+      Plan step's min_size_byte threshold. Correctly classified as
+      category=contract (not "unknown") after the Phase I classification
+      fix; second attempt succeeded.
+
+  - name: missing_expected_columns
+    prompt: >
+      Write a script that creates a CSV file named report.csv with
+      columns date, revenue, and region, containing 5 rows of data.
+    expected_failure: >
+      EvaluationResult reason mentions missing expected columns
+    notes: >
+      A good test of validators.py's column-matching logic; a model
+      that produces the right row count but wrong/misspelled headers
+      triggers this specific failure path.

@@ -1,0 +1,23 @@
+category: environment
+description: >
+  Failures caused by missing packages, missing files, or import errors.
+  Repair strategy is always "patch" - the fix is usually a single import
+  or dependency change, not a different approach.
+examples:
+  - name: missing_third_party_package
+    prompt: >
+      Write a script that uses the 'requests_html' library to fetch a webpage
+      and print its title.
+    expected_failure: ModuleNotFoundError
+    notes: >
+      requests_html is not in the sandbox's pre-installed library set,
+      so this reliably triggers an environment-category failure on attempt 1.
+
+  - name: nonexistent_input_file
+    prompt: >
+      Write a script that reads a file named 'input_data.csv' from the
+      current directory and prints the number of rows.
+    expected_failure: FileNotFoundError
+    notes: >
+      No such file exists in a fresh sandbox workspace, so this fails
+      immediately unless the script creates the file itself first.

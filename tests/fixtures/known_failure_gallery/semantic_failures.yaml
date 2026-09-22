@@ -1,0 +1,31 @@
+category: semantic
+description: >
+  Cases where the code executes successfully and passes contract
+  validation, but does not actually fulfill the user's intent, or
+  where the LLM-as-judge itself fails to return parseable output.
+  Repair strategy is "rethink".
+examples:
+  - name: judge_response_not_valid_json
+    prompt: >
+      Write a script that generates a bar chart as a PNG file named
+      chart.png, showing sales figures for 5 products, using matplotlib.
+    expected_failure: >
+      EvaluationResult(passed=False, reason="Could not parse semantic
+      judge response; treating as failure.")
+    notes: >
+      Observed in a real run via openrouter/free - the judge model's
+      response didn't parse as clean JSON. judge.py fails closed by
+      design, correctly treating an unparseable judgment as failure
+      rather than a silent pass.
+
+  - name: artifact_exists_but_judge_cannot_confirm_content
+    prompt: >
+      Write a script that creates a CSV file named data.csv with
+      columns name and age, containing exactly 2 rows of sample data.
+    expected_failure: >
+      EvaluationResult(passed=False, reason mentions file size alone
+      being insufficient to verify row/column correctness)
+    notes: >
+      Observed in a real run - the judge correctly declined to confirm
+      success from stdout/artifact-size metadata alone when it could
+      not verify actual CSV content, a reasonably conservative judgment.

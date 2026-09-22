@@ -1,0 +1,26 @@
+category: external
+description: >
+  Failures from network calls - connection errors, blocked requests,
+  HTTP error status codes. Repair strategy is "rethink", since the
+  same request will usually fail the same way again.
+examples:
+  - name: network_disabled_by_default
+    prompt: >
+      Write a script that scrapes the title from https://example.com
+      using the requests library.
+    expected_failure: ConnectionError (unless contract explicitly sets requires_network=true)
+    notes: >
+      By default the Plan step should set requires_network based on
+      task intent; if it under-specifies this, the sandbox's
+      network_mode=NetworkMode.NONE blocks the request entirely,
+      producing a clean external-category failure.
+
+  - name: scraping_target_returns_403
+    prompt: >
+      Write a script that scrapes product listings from a site that
+      blocks simple scraper requests (no custom headers or user agent).
+    expected_failure: HTTPError with status 403
+    notes: >
+      A generic requests.get() without headers is often blocked by
+      real sites. Classifier correctly extracts the 403 status code
+      from stdout/stderr per the EXTERNAL_HTTP_STATUS_SIGNALS list.

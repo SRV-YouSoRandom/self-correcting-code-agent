@@ -1,0 +1,15 @@
+category: syntax
+description: >
+  Failures caused by malformed code the LLM generated - usually from
+  smaller or free-tier models. Repair strategy is "patch".
+examples:
+  - name: complex_nested_task_from_free_model
+    prompt: >
+      Write a script that creates a CSV file named data.csv with columns
+      name and age, containing exactly 2 rows of sample data.
+    expected_failure: SyntaxError or IndentationError
+    notes: >
+      Observed in practice when routed through openrouter/free - smaller
+      underlying models occasionally produce malformed indentation or
+      unmatched brackets on the first attempt. A simple, well-specified
+      task is enough to trigger this; complexity is not required.

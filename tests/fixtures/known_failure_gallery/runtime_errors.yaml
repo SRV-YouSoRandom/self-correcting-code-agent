@@ -1,0 +1,17 @@
+category: runtime
+description: >
+  Failures caused by logic errors that only surface during execution -
+  TypeError, KeyError, IndexError, and similar. Repair strategy is "patch".
+examples:
+  - name: algorithmic_edge_cases
+    prompt: >
+      Write a single-file Python function def max_subarray_product(nums: list[int]) -> int:
+      that returns the maximum product of a contiguous subarray. It must handle
+      zeros, negative numbers, and a single-element array, and avoid
+      overflow/timeout on arrays up to 10^5 elements.
+    expected_failure: nonzero exit code, typically IndexError or logic error on edge cases
+    notes: >
+      Observed in practice: first attempt exits with code 1 on an
+      unhandled edge case (e.g. empty subarray tracking, negative-pair
+      handling). Second attempt, generated with the traceback as
+      context, corrects it.
